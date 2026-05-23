@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>JSON Formatter & Validator | Pretty Print, Minify & CSV Converter</title>
+  <meta name="description" content="Free online JSON formatter, validator, and beautifier. Pretty print JSON, minify, convert to CSV, and validate syntax instantly. Clean, fast, and developer-friendly.">
+  <meta name="keywords" content="JSON formatter, JSON validator, pretty JSON, JSON minify, JSON to CSV, online JSON tool, beautify JSON">
+  <meta name="author" content="JSON Tool">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f5f7fb;
+      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+      padding: 2rem 1.5rem;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #0f172a, #3b82f6);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      color: #475569;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    /* Ad placeholder */
+    .ad-top {
+      background: #eef2ff;
+      border-radius: 20px;
+      text-align: center;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      color: #2563eb;
+      border: 1px dashed #94a3b8;
+    }
+
+    .ad-top span {
+      font-weight: 500;
+    }
+
+    /* two-column layout */
+    .editor-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.8rem;
+    }
+
+    .input-panel, .output-panel {
+      flex: 1;
+      min-width: 280px;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.02);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .panel-header h3 {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #0f172a;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: white;
+      border: 1px solid #cbd5e1;
+      padding: 0.4rem 0.9rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #1e293b;
+      font-family: inherit;
+    }
+
+    button:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+
+    button.primary {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      color: white;
+    }
+
+    button.primary:hover {
+      background: #2563eb;
+    }
+
+    button.danger-outline {
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+    button.danger-outline:hover {
+      background: #fef2f2;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 1.2rem;
+      font-family: 'Menlo', 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      border: none;
+      resize: vertical;
+      background: white;
+      color: #0f172a;
+      outline: none;
+      min-height: 380px;
+    }
+
+    .output-area {
+      background: #ffffff;
+      padding: 1.2rem;
+      font-family: 'Menlo', 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-x: auto;
+      min-height: 380px;
+      max-height: 550px;
+      overflow-y: auto;
+    }
+
+    .status-bar {
+      background: #f1f5f9;
+      padding: 0.75rem 1.2rem;
+      font-size: 0.8rem;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .status-badge.valid {
+      color: #15803d;
+    }
+    .status-badge.invalid {
+      color: #b91c1c;
+    }
+    .error-message {
+      color: #dc2626;
+      font-family: monospace;
+      font-size: 0.75rem;
+    }
+
+    /* Related Articles Section */
+    .related-articles {
+      margin-top: 2.5rem;
+      background: white;
+      border-radius: 28px;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      border: 1px solid #e2e8f0;
+    }
+
+    .related-articles h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #0f172a;
+    }
+
+    .article-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+    }
+
+    .article-card {
+      flex: 1;
+      min-width: 200px;
+      background: #f8fafc;
+      padding: 1rem 1.2rem;
+      border-radius: 20px;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: #1e293b;
+      border: 1px solid #e2e8f0;
+    }
+
+    .article-card:hover {
+      background: #f1f5f9;
+      transform: translateY(-2px);
+      border-color: #cbd5e1;
+    }
+
+    .article-card strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+      color: #2563eb;
+    }
+
+    .article-card span {
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #64748b;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 1.5rem;
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 1rem; }
+      .related-articles { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>✨ JSON Formatter & Validator</h1>
+    <p>Beautify, minify, validate, and convert JSON — instant & secure (client-side only)</p>
+  </div>
+
+  <div class="ad-top">
+    📢 <span>Advertisement</span> — Replace this with your AdSense banner.
+  </div>
+
+  <div class="editor-grid">
+    <div class="input-panel">
+      <div class="panel-header">
+        <h3>📝 JSON Input</h3>
+        <div class="btn-group">
+          <button id="formatBtn" class="primary">✨ Format / Beautify</button>
+          <button id="minifyBtn">⚡ Minify</button>
+          <button id="clearBtn" class="danger-outline">🗑 Clear</button>
+        </div>
+      </div>
+      <textarea id="jsonInput" placeholder='Paste or type your JSON here... Example:
+{
+  "name": "JSON Tool",
+  "features": ["validate", "format", "minify", "csv"],
+  "active": true
+}'></textarea>
+      <div class="status-bar">
+        <div class="status-badge" id="validationStatus">⚪ Waiting for input</div>
+        <div id="errorDetail" class="error-message"></div>
+      </div>
+    </div>
+
+    <div class="output-panel">
+      <div class="panel-header">
+        <h3>📄 Formatted Output</h3>
+        <div class="btn-group">
+          <button id="copyBtn">📋 Copy Output</button>
+          <button id="downloadBtn">💾 Download .json</button>
+          <button id="csvBtn">📊 Convert to CSV</button>
+        </div>
+      </div>
+      <div id="jsonOutput" class="output-area">// Formatted JSON will appear here</div>
+      <div class="status-bar">
+        <span>🔒 Client‑side only — your data never leaves your device</span>
+        <span id="sizeInfo"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEO Article Links Section -->
+  <div class="related-articles">
+    <h3>📚 Related Guides & Tutorials</h3>
+    <div class="article-links">
+      <a href="blog/best-json-formatter-online.html" class="article-card">
+        <strong>🔍 Best JSON Formatter Online</strong>
+        <span>Compare top tools & find the fastest validator →</span>
+      </a>
+      <a href="blog/json-to-csv-converter-guide.html" class="article-card">
+        <strong>📊 JSON to CSV Converter</strong>
+        <span>Complete guide + flatten nested data →</span>
+      </a>
+      <a href="blog/json-beautifier-minifier-guide.html" class="article-card">
+        <strong>⚡ Beautifier vs Minifier</strong>
+        <span>When to use each with real examples →</span>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    ⚡ Clean, fast JSON toolkit • Perfect for developers • Support us by allowing ads
+  </footer>
+</div>
+
+<script>
+  (function() {
+    const inputTextarea = document.getElementById('jsonInput');
+    const outputDiv = document.getElementById('jsonOutput');
+    const validationStatusSpan = document.getElementById('validationStatus');
+    const errorDetailSpan = document.getElementById('errorDetail');
+    const sizeInfoSpan = document.getElementById('sizeInfo');
+
+    const formatBtn = document.getElementById('formatBtn');
+    const minifyBtn = document.getElementById('minifyBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const csvBtn = document.getElementById('csvBtn');
+
+    function processJSON(rawText, beautify = true) {
+      if (!rawText || rawText.trim() === '') {
+        return { success: false, error: 'Empty input. Paste valid JSON.' };
+      }
+      try {
+        const parsed = JSON.parse(rawText);
+        let resultString = beautify ? JSON.stringify(parsed, null, 2) : JSON.stringify(parsed);
+        return { success: true, data: parsed, stringified: resultString };
+      } catch (err) {
+        return { success: false, error: err.message };
+      }
+    }
+
+    function updateOutputAndStatus(formattedJsonString, isValid, errorMsg = null, rawJson = null) {
+      if (isValid && formattedJsonString !== undefined) {
+        outputDiv.innerText = formattedJsonString;
+        validationStatusSpan.innerHTML = '✅ Valid JSON';
+        validationStatusSpan.className = 'status-badge valid';
+        errorDetailSpan.innerText = '';
+        if (rawJson) {
+          const size = new Blob([rawJson]).size;
+          sizeInfoSpan.innerText = `Size: ${size} bytes`;
+        } else {
+          sizeInfoSpan.innerText = `Output size: ${new Blob([formattedJsonString]).size} bytes`;
+        }
+      } else if (!isValid) {
+        outputDiv.innerText = '// Invalid JSON — fix errors to see formatted output';
+        validationStatusSpan.innerHTML = '❌ Invalid JSON';
+        validationStatusSpan.className = 'status-badge invalid';
+        errorDetailSpan.innerText = errorMsg || 'Syntax error';
+        sizeInfoSpan.innerText = '';
+      }
+    }
+
+    function formatJSON(beautify = true) {
+      const raw = inputTextarea.value;
+      if (!raw.trim()) {
+        updateOutputAndStatus(null, false, 'No JSON provided.');
+        return;
+      }
+      const result = processJSON(raw, beautify);
+      if (result.success) {
+        updateOutputAndStatus(result.stringified, true, null, raw);
+      } else {
+        updateOutputAndStatus(null, false, result.error);
+      }
+    }
+
+    function minifyJSON() {
+      const raw = inputTextarea.value;
+      if (!raw.trim()) { updateOutputAndStatus(null, false, 'Empty input'); return; }
+      const result = processJSON(raw, false);
+      if (result.success) updateOutputAndStatus(result.stringified, true, null, raw);
+      else updateOutputAndStatus(null, false, result.error);
+    }
+
+    function clearAll() {
+      inputTextarea.value = '';
+      outputDiv.innerText = '// Formatted JSON will appear here';
+      validationStatusSpan.innerHTML = '⚪ Cleared';
+      validationStatusSpan.className = 'status-badge';
+      errorDetailSpan.innerText = '';
+      sizeInfoSpan.innerText = '';
+    }
+
+    async function copyOutput() {
+      const content = outputDiv.innerText;
+      if (!content || content.includes('Invalid')) {
+        copyBtn.innerText = '⚠️ No valid data';
+        setTimeout(() => { copyBtn.innerText = '📋 Copy Output'; }, 1200);
+        return;
+      }
+      await navigator.clipboard.writeText(content);
+      const original = copyBtn.innerText;
+      copyBtn.innerText = '✅ Copied!';
+      setTimeout(() => { copyBtn.innerText = original; }, 1500);
+    }
+
+    function downloadOutputAsJson() {
+      let content = outputDiv.innerText;
+      if (content.includes('Invalid') || content === '// Formatted JSON will appear here') {
+        alert('No valid JSON output to download.');
+        return;
+      }
+      try {
+        const parsed = JSON.parse(content);
+        const blob = new Blob([JSON.stringify(parsed, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `formatted_${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch(e) { alert('Output is not valid JSON.'); }
+    }
+
+    function convertJSONtoCSV() {
+      const raw = inputTextarea.value;
+      if (!raw.trim()) { alert('Please enter JSON data first.'); return; }
+      let parsedData;
+      try { parsedData = JSON.parse(raw); } catch (err) { alert(`Invalid JSON: ${err.message}`); return; }
+      
+      function jsonToCsv(json) {
+        let dataArray = Array.isArray(json) ? json : [json];
+        if (dataArray.length === 0) throw new Error('Empty array');
+        const allKeys = new Set();
+        for (const obj of dataArray) {
+          if (typeof obj === 'object' && obj !== null) Object.keys(obj).forEach(k => allKeys.add(k));
+        }
+        const headers = Array.from(allKeys);
+        const rows = [headers.join(',')];
+        for (const obj of dataArray) {
+          const row = headers.map(header => {
+            let val = obj[header];
+            if (val === undefined || val === null) val = '';
+            if (typeof val === 'object') val = JSON.stringify(val);
+            const stringVal = String(val);
+            if (stringVal.includes(',') || stringVal.includes('"') || stringVal.includes('\n')) {
+              return `"${stringVal.replace(/"/g, '""')}"`;
+            }
+            return stringVal;
+          }).join(',');
+          rows.push(row);
+        }
+        return rows.join('\n');
+      }
+      try {
+        const csvString = jsonToCsv(parsedData);
+        const blob = new Blob([csvString], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `json_export_${Date.now()}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        csvBtn.innerText = '✅ CSV Saved!';
+        setTimeout(() => { csvBtn.innerText = '📊 Convert to CSV'; }, 1500);
+      } catch (err) { alert(`CSV error: ${err.message}`); }
+    }
+
+    formatBtn.addEventListener('click', () => formatJSON(true));
+    minifyBtn.addEventListener('click', minifyJSON);
+    clearBtn.addEventListener('click', clearAll);
+    copyBtn.addEventListener('click', copyOutput);
+    downloadBtn.addEventListener('click', downloadOutputAsJson);
+    csvBtn.addEventListener('click', convertJSONtoCSV);
+    
+    inputTextarea.addEventListener('input', () => {
+      const raw = inputTextarea.value;
+      if (!raw.trim()) {
+        validationStatusSpan.innerHTML = '⚪ Waiting for input';
+        errorDetailSpan.innerText = '';
+      } else {
+        try { JSON.parse(raw); validationStatusSpan.innerHTML = '✅ Valid JSON'; validationStatusSpan.className = 'status-badge valid'; errorDetailSpan.innerText = ''; } 
+        catch(err) { validationStatusSpan.innerHTML = '❌ Syntax Error'; validationStatusSpan.className = 'status-badge invalid'; errorDetailSpan.innerText = err.message; }
+      }
+    });
+
+    function setDefaultExample() {
+      inputTextarea.value = JSON.stringify({ "website": "JSON Formatter Pro", "features": ["validate", "beautify", "minify", "csvExport"], "author": "devtool", "stats": { "users": 12400, "rating": 4.9 } }, null, 2);
+      formatJSON(true);
+    }
+    setDefaultExample();
+  })();
+</script>
+</body>
+</html>
