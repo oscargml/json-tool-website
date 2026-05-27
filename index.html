@@ -308,7 +308,6 @@
     </div>
   </div>
 
-  <!-- SEO Article Links Section -->
   <div class="related-articles">
     <h3>📚 Related Guides & Tutorials</h3>
     <div class="article-links">
@@ -414,7 +413,7 @@
 
     async function copyOutput() {
       const content = outputDiv.innerText;
-      if (!content || content.includes('Invalid')) {
+      if (!content || content.includes('Invalid') || content.startsWith('//')) {
         copyBtn.innerText = '⚠️ No valid data';
         setTimeout(() => { copyBtn.innerText = '📋 Copy Output'; }, 1200);
         return;
@@ -427,7 +426,7 @@
 
     function downloadOutputAsJson() {
       let content = outputDiv.innerText;
-      if (content.includes('Invalid') || content === '// Formatted JSON will appear here') {
+      if (content.includes('Invalid') || content.startsWith('//')) {
         alert('No valid JSON output to download.');
         return;
       }
